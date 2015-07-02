@@ -85,7 +85,7 @@ class ChainedChoicesMixin(object):
                 if parent_value:
                     parent_value = getattr(parent_value, 'pk', parent_value)
 
-                    url = field.ajax_url
+                    url = str(field.ajax_url)
                     params = {
                         'field_name': field_name,
                         'parent_value': parent_value,
@@ -161,7 +161,7 @@ class ChainedChoicesMixin(object):
         field = self.fields[attr_name]
         if hasattr(instance, attr_name):
             attribute = getattr(instance, attr_name)
-            attr_value = getattr(attribute, 'pk', unicode(attribute)) if attribute else None
+            attr_value = getattr(attribute, 'pk', attribute) if attribute else None
             setattr(self, '%s' % attr_name, attr_value)
 
             if hasattr(field, 'parent_field'):
