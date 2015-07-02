@@ -7,8 +7,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.validators import EMPTY_VALUES
 from django.db import models
 
-from form_fields import ChainedChoiceField, ChainedModelChoiceField
-from testclient import TestClient
+from .form_fields import ChainedChoiceField, ChainedModelChoiceField
+from .testclient import TestClient
 
 
 class ChainedChoicesMixin(object):
@@ -85,7 +85,7 @@ class ChainedChoicesMixin(object):
                 if parent_value:
                     parent_value = getattr(parent_value, 'pk', parent_value)
 
-                    url = field.ajax_url
+                    url = str(field.ajax_url)
                     params = {
                         'field_name': field_name,
                         'parent_value': parent_value,
@@ -96,7 +96,7 @@ class ChainedChoicesMixin(object):
                     try:
                         field.choices = field.choices + json.loads(data.content)
                     except ValueError:
-                        raise ValueError(u'Data returned from ajax request (url=%(url)s, params=%(params)s) could not be deserialized to Python object' % {
+                        raise ValueError('Data returned from ajax request (url=%(url)s, params=%(params)s) could not be deserialized to Python object' % {
                             'url': url,
                             'params': params
                         })
@@ -161,7 +161,7 @@ class ChainedChoicesMixin(object):
         field = self.fields[attr_name]
         if hasattr(instance, attr_name):
             attribute = getattr(instance, attr_name)
-            attr_value = getattr(attribute, 'pk', unicode(attribute)) if attribute else None
+            attr_value = getattr(attribute, 'pk', attribute) if attribute else None
             setattr(self, '%s' % attr_name, attr_value)
 
             if hasattr(field, 'parent_field'):
