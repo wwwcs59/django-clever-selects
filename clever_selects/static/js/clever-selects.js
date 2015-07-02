@@ -1,5 +1,5 @@
-$(document).ready(function() {
-    $.fn.loadChildChoices = function(child) {
+$(document).ready(function () {
+    $.fn.loadChildChoices = function (child) {
 //        if (chained_id.indexOf('__prefix__') != -1) {
 //            chained_id = chained_id.replace('__prefix__', $(this).attr('name').split('-')[1]);
 //            $(this).attr('chained_id', chained_id);
@@ -17,6 +17,10 @@ $(document).ready(function() {
 //            empty_label: empty_label
 //        });
 
+//        if ($(this).val().length <= 0) {
+//            return;
+//        }
+
         $.get(
             ajax_url,
             {
@@ -24,10 +28,10 @@ $(document).ready(function() {
                 parent_field: $(this).attr('name'),
                 parent_value: $(this).val()
             },
-            function(j) {
+            function (j) {
                 var options = '';
 //                if(j.length > 1) {
-                    options += '<option value="">' + empty_label + '</option>';
+                options += '<option value=\"\">' + empty_label + '</option>';
 //                }
                 for (var i = 0; i < j.length; i++) {
                     options += '<option value="' + j[i][0] + '">' + j[i][1] + '</option>';
@@ -41,18 +45,19 @@ $(document).ready(function() {
         );
     };
 
-    $.fn.loadAllChainedChoices = function() {
+    $.fn.loadAllChainedChoices = function () {
         var chained_ids = $(this).attr('chained_ids').split(",");
 
         for (var i = 0; i < chained_ids.length; i++) {
             var chained_id = chained_ids[i];
-
             $(this).loadChildChoices($('#' + chained_id));
         }
     };
 
-    $('.chained-parent-field').change(function() {
+    $('.chained-parent-field').change(function () {
         $(this).loadAllChainedChoices();
+        $(this).stopPropagation();
     });
-//    }).change();  // Use change only if really necessary. Be aware of using it in POST requests!
-});
+//    }).change(); # Use change only if really necessary. Be aware of using it in POST requests!
+})
+;
